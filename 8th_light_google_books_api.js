@@ -13,63 +13,132 @@
 // Please do not add any additional features.
 
 
+// "prompt" from nodejs (npm install prompt)
+var prompt = require('prompt');
 
-// planning:
+// reading list - filled for dev
+let readingList = [     ["demo title", "demo author", "demo publishing co"], 
+                    ["demo title", "demo author", "demo publishing co"], 
+                    ["demo title", "demo author", "demo publishing co"], 
+                    ["demo title", "demo author", "demo publishing co"], 
+                    ["demo title", "demo author", "demo publishing co"]];
 
-// program will initialize the following:
-    //  - empty user reading list
-    //  - empty (temp/resuable) search results list (include books author, title, publishing company)
-        // this list will be filled with the top 5 results from google books api with search query is made
-        // when user selects one, the info will be copied into the user library reading list
+// search results list - filled for dev
+    // this list will be filled with the top 5 results from google books api with search query is made
+    // when user selects one, the info will be copied into the user library reading list
+let searchResults = [   [1, "demo title", "demo author", "demo publishing co"], 
+                    [2, "demo title", "demo author", "demo publishing co"], 
+                    [3, "demo title", "demo author", "demo publishing co"], 
+                    [4, "demo title", "demo author", "demo publishing co"], 
+                    [5, "demo title", "demo author", "demo publishing co"]];
+        
+function startupMessage() {
+    console.log(``);
+    console.log(`Welcome to your virtual book library!`);
+    console.log(``);
+    mainMenu();
+}            
 
+function mainMenu() {
+    console.log(`[Main Menu]`);
+    console.log(``);
+    console.log(`You currently have ${readingList.length} books in your Reading List`);
+    navOptions();
+}
 
-
-// user experience / flow
-
-// welcome message w/ instructions
-    // [upon starting program]
-    // "Welcome to Your Library!!"
-
-    // "[Main Menu]"
-        // You currently have {readingList.length} books in your Reading List.
-
-        // New Book Search: type "new" + enter
-        // Reading List: type "list" + enter
-        // Main Menu = type "main" + enter
-        // Quit = type "q" + enter
-            // NOTE - include error catching for invalid entries
+function navOptions() {
+    console.log(``);
+    console.log(`--------------------------------------------------------`);
+    console.log(``);
+    console.log(`New Book Search:   type "new" + enter`);
+    console.log(`Reading List:      type "list" + enter`);
+    console.log(`Main Menu:         type "main" + enter`);
+    console.log(`Quit:              type "q" + enter`);
+    console.log(``);
     
+    // call function to listen to user input
+    listenForUserInput();
 
-    // "[Reading List]"
-        // note = will display current reading list in a table
-        // [#      title      author      publishin company]
-        
-        // New Book Search: type "new" + enter
-        // Reading List: type "list" + enter
-        // Main Menu = type "main" + enter
-        // Quit = type "q" + enter
-            // NOTE - include error catching for invalid entries
+}
 
-    // "[New Book Search]""
-        // Please type your search query and press enter...
-            // how to let user escape from search function?? 
-                // -- require them to enter "s:" + search term, then keep other commands active?
-                // provide a key word to escape search?
-            // any sort of error catching or edge cases that need to be caught here??
-            // anything special that needs to be done to query to work with API??
-            // if there are no results, provide guidance and allow user to try again
+function readingListView() {
+    console.log(`[Your Reading List]`);
+    console.log(``);
+    if (!readingList.length) console.log(`You're reading list is empty :( `);
+    else {
+        console.log(` #  ||  TITLE  ||  AUTHOR ||  PUBLISHING COMPANY`);
+        console.log(` ------------------------------- `);
+        for (let i = 0; i < readingList.length; i++) {
+            console.log(` ${i+1}  ||  ${readingList[i][0]}  ||  ${readingList[i][1]}  ||  ${readingList[i][2]} `);
+        }
+    }
+    console.log(``);
+    navOptions();
+}
 
-        
-    // "[Book Search Results]"
-        // will return top 5 results from google books api (numbered 1-5)
-        // below search results will provide guidance...
-            // To add a book to your reading list: type "# of your book selection" + enter 
-                // note - you'll be redirected to your reading list
 
-        // New Book Search: type "new" + enter
-        // Reading List: type "list" + enter
-        // Main Menu = type "main" + enter
-        // Quit = type "q" + enter
-            // NOTE - include error catching for invalid entries
+function newBookSearch() {
+    console.log(`[New Book Search]`);
+    console.log(``);
+    console.log(`Type in the your search below, then hit enter!`);
+    console.log(` ------------------------------- `);
+    console.log(``);
+    // call function to listen for user book search...
+}
 
-                
+ // "[Book Search Results]"
+    // will return top 5 results from google books api (numbered 1-5)
+    // below search results will provide guidance...
+        // To add a book to your reading list: type "# of your book selection" + enter 
+            // note - you'll be redirected to your reading list
+
+    // New Book Search: type "new" + enter
+    // Reading List: type "list" + enter
+    // Main Menu = type "main" + enter
+    // Quit = type "q" + enter
+        // NOTE - include error catching for invalid entries
+
+
+
+
+
+function listenForUserInput() {
+    // NOTE - include error catching for invalid entries
+    console.log(`note - listenForUserInput fnc called`);
+
+    let userInput = null;
+    // let userInput = ????;
+    // while (userInput === null) listenForUserInput();
+    while (userInput) {
+        if (userInput === `new` ) return newBookSearch();
+        if (userInput === `list` ) return readingListView();
+        if (userInput === `main` ) return mainMenu();
+        // if (userInput === `q` ) return ;
+        else {
+            console.log(`invalid entry... please try again`);
+            navOptions();
+            listenForUserInput();
+        }
+    }
+    console.log('end of listne for user Input...');
+}
+
+function listenForUserBookSearch() {
+    // NOTE - include error catching for invalid entries
+
+    // provide a way to let users escape from search? or force them to search?
+        // -- require them to enter "s:" + search term, then keep other commands active?
+        // provide a key word to escape search?
+
+    // what sort of errors / edge cases will I need to catch??
+    // how will i need to manipulate the user input for the api query??? 
+    // if there are no results, I'll need to provide guidance and allow the user to try again...
+}
+
+
+
+console.log('hello... ');
+console.log('............. ');
+console.log(readingList);
+console.log(searchResults);
+startupMessage();
