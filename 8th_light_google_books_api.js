@@ -14,7 +14,7 @@
 
 
 // "prompt" from nodejs (npm install prompt)
-var prompt = require('prompt');
+const prompt = require('prompt');
 
 // reading list - filled for dev
 let readingList = [     ["demo title", "demo author", "demo publishing co"], 
@@ -81,7 +81,7 @@ function newBookSearch() {
     console.log(`[New Book Search]`);
     console.log(``);
     console.log(`Type in the your search below, then hit enter!`);
-    console.log(` ------------------------------- `);
+    console.log(`---------------------------------------------- `);
     console.log(``);
     // call function to listen for user book search...
 }
@@ -104,23 +104,27 @@ function newBookSearch() {
 
 function listenForUserInput() {
     // NOTE - include error catching for invalid entries
-    console.log(`note - listenForUserInput fnc called`);
+    // console.log(`note - listenForUserInput fnc called`);
 
-    let userInput = null;
-    // let userInput = ????;
-    // while (userInput === null) listenForUserInput();
-    while (userInput) {
-        if (userInput === `new` ) return newBookSearch();
-        if (userInput === `list` ) return readingListView();
-        if (userInput === `main` ) return mainMenu();
-        // if (userInput === `q` ) return ;
-        else {
-            console.log(`invalid entry... please try again`);
-            navOptions();
-            listenForUserInput();
+    let userInput = 0;
+    prompt.get(['input'], function (err, result) {
+        // console.log(`result: ${JSON.stringify(result)}`);
+        let userInput = result.input;
+        console.log(`userInput: ${userInput}`);
+        console.log(``);
+        if (userInput) {
+            if (userInput === `new` ) newBookSearch();
+            if (userInput === `list` ) readingListView();
+            if (userInput === `main` ) mainMenu();
+            // if (userInput === `q` ) return ;
+            else if (userInput) {
+                console.log(``);
+                console.log(`invalid entry... please try again`);
+                navOptions();
+            }
         }
-    }
-    console.log('end of listne for user Input...');
+    })
+
 }
 
 function listenForUserBookSearch() {
