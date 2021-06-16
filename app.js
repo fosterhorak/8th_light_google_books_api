@@ -89,7 +89,7 @@ function bookSearchResults(searchTerm) {
 }
 
 
-// COMPONENTS....
+// HELPER COMPONENT FUNCTIONS....
 
 // prints directory instructions
 function directory() {
@@ -206,7 +206,7 @@ function listenForReadingListAddition() {
             if (selection === `1` ) {
                 addBook(1);
                 readingListView();
-            }r3
+            }
             if (selection === `2` ) {
                 addBook(2);
                 readingListView();
