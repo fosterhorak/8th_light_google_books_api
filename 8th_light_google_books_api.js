@@ -8,7 +8,8 @@
 // Each item in the list should include the book's author, title, and publishing company.
 // A user should be able to select a book from the five displayed to save to a “Reading List”
 // View a “Reading List” with all the books the user has selected from their queries -- this is a local reading list and not tied to Google Books’s account features.
-// For programming language, choose any language you want as long as it is not the same language you chose to review in the Code Review section above. Feel free to use a library (or not) for the Google Books call or JSON parsing.
+// For programming language, choose any language you want as long as it is not the same language you chose to review in the Code Review section above. 
+// Feel free to use a library (or not) for the Google Books call or JSON parsing.
 
 // Please do not add any additional features.
 
@@ -17,13 +18,11 @@
 
 
 // NOTES  (to do)
-    // - rest of functions up and working...
     // - google api functioning...
     // - copy top 5 results to searchResults
     // - user selection to add book to reading list...
     // - test for bugs and edge cases...
     // - add colors to make readability easier (welcome message, menu, list, search, and goodbye message)
-
 
 
 // "readline" from nodejs (npm install prompt) -- to handle user inputs
@@ -33,16 +32,15 @@ const rl = readline.createInterface({
     output: process.stdout
 });
 
-// reading list - filled for dev
-let readingList = [     ["demo title", "demo author", "demo publishing co"], 
-                    ["demo title", "demo author", "demo publishing co"], 
-                    ["demo title", "demo author", "demo publishing co"], 
-                    ["demo title", "demo author", "demo publishing co"], 
-                    ["demo title", "demo author", "demo publishing co"]];
+// reading list - filled for dev purposes
+let readingList = [];
+// let readingList = [     ["demo title", "demo author", "demo publishing co"], 
+//                     ["demo title", "demo author", "demo publishing co"], 
+//                     ["demo title", "demo author", "demo publishing co"], 
+//                     ["demo title", "demo author", "demo publishing co"], 
+//                     ["demo title", "demo author", "demo publishing co"]];
 
-// search results list - filled for dev
-    // this list will be filled with the top 5 results from google books api with search query is made
-    // when user selects one, the info will be copied into the user library reading list
+// search results list - filled for dev purposes
 let searchResults = [   ["demo search title 1", "demo search author", "demo search publishing co"], 
                     ["demo search title 2", "demo search author", "demo search publishing co"], 
                     ["demo search title 3", "demo search author", "demo search publishing co"], 
@@ -55,7 +53,6 @@ function startupMessage() {
 }            
 
 function mainMenu() {
-
     console.log(`\n[Main Menu]\n`);
     console.log(`You currently have ${readingList.length} books in your Reading List`);
     navOptions();
@@ -75,24 +72,24 @@ function navOptions() {
 
 function readingListView() {
     console.log(`\n[Your Reading List]\n`);
-    if (!readingList.length) console.log(`You're reading list is empty :( `);
-    else {
-        console.log(` #  ||  TITLE  ||  AUTHOR ||  PUBLISHING COMPANY`);
-        console.log(` ------------------------------- `);
-        for (let i = 0; i < readingList.length; i++) {
-            console.log(` ${i+1}  ||  ${readingList[i][0]}  ||  ${readingList[i][1]}  ||  ${readingList[i][2]} `);
-        }
-    }
+    if (!readingList.length) console.log(`Your reading list is empty :( `);
+    else displayBookList(readingList);
     navOptions();
     listenForUserInput();
 }
 
+function displayBookList(list){
+    console.log(` #  ||  TITLE  ||  AUTHOR ||  PUBLISHING COMPANY`);
+    console.log(` ----------------------------------------------- `);
+    for (let i = 0; i < list.length; i++) {
+        console.log(` ${i+1}  ||  ${list[i][0]}  ||  ${list[i][1]}  ||  ${list[i][2]} `);
+    }
+}
 
 function newBookSearch() {
     console.log(`\n[New Book Search]\n`);
     console.log(`Type in your search below, then hit enter!`);
     console.log(`------------------------------------------\n`);
-    // call function to listen for user book search...
     listenForUserBookSearch();
 }
 
@@ -166,11 +163,6 @@ function listenForReadingListAddition() {
                 console.log(`\nInvalid entry. Please try again.\n`);
                 listenForReadingListAddition();
             }
-
-            // if (userSelection != "new" && userSelection != "list" && userSelection != "main" && userSelection != "q") {
-            //     console.log(`\nNot an accepted slection or directory key. Please try again.\n`);
-            //     listenForReadingListAddition();
-            // } 
         }
     });
 }
@@ -184,7 +176,7 @@ function bookSearchResults(searchTerm) {
     // call helper function - googleBookSearch(searchTerm);
     // will return / update my temporary searchResults (book array);
     
-    printSearchResults(searchResults);
+    displayBookList(searchResults);
     console.log(`\nTo add a book to your reading list, enter the book's number [1-5]`);
     console.log(`^ You will be redirected to your reading list ^\n`);
     console.log(`Or navigate using the directory below...`);
@@ -194,14 +186,6 @@ function bookSearchResults(searchTerm) {
     // need to account for situation for no search results...
 }
 
-function printSearchResults (bookArr) {
-    console.log(` # ||  TITLE  ||  AUTHOR ||  PUBLISHING COMPANY`);
-    for (let i = 0; i < bookArr.length; i++) {
-        console.log (` ${i+1} || ${bookArr[i][0]} || ${bookArr[i][1]} || ${bookArr[i][2]}`);
-    }
-}
-
-
 function googleBookSearch(searchTerm) {
     // take user search
     // call google API
@@ -209,22 +193,12 @@ function googleBookSearch(searchTerm) {
     // copy/scrape to my temporary searchResults array
     // return array
 }
-// "[Book Search Results]"
-   // will return top 5 results from google books api (numbered 1-5)
-   // below search results will provide guidance...
-       // To add a book to your reading list: type "# of your book selection" + enter 
-           // note - you'll be redirected to your reading list
-
-   // New Book Search: type "new" + enter
-   // Reading List: type "list" + enter
-   // Main Menu = type "main" + enter
-   // Quit = type "q" + enter
-       // NOTE - include error catching for invalid entries
-
 
 function addBook(num) {
     readingList.push(searchResults[num-1]);
     console.log('\nBook Added to Reading List!!!\n');
 }       
+
+
 
 startupMessage();
