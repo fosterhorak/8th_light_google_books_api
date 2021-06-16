@@ -12,12 +12,13 @@
 
 // Please do not add any additional features.
 
-// ...
+// .......................................................
 
 
 
 // "prompt" from nodejs (npm install prompt)
 // const prompt = require('prompt');
+
 
 // "readline" from nodejs (npm install prompt)
 const readline = require("readline");
@@ -25,21 +26,6 @@ const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout
 });
-
-// rl.question("What is your name ? ", function(name) {
-//     rl.question("Where do you live ? ", function(country) {
-//         console.log(`${name}, is a citizen of ${country}`);
-//         rl.close();
-//     });
-// });
-
-// rl.on("close", function() {
-//     console.log("\nBYE BYE !!!");
-//     process.exit(0);
-// });
-
-
-
 
 
 
@@ -62,13 +48,11 @@ let searchResults = [   [1, "demo title", "demo author", "demo publishing co"],
 function startupMessage() {
     console.log(``);
     console.log(`Welcome to your virtual book library!`);
-    console.log(``);
     mainMenu();
 }            
 
 function mainMenu() {
     console.log(``);
-    // console.log(`*******************************`);
     console.log(``);
     console.log(`[Main Menu]`);
     console.log(``);
@@ -93,7 +77,6 @@ function navOptions() {
 
 function readingListView() {
     console.log(``);
-    // console.log(`*******************************`);
     console.log(``);
     console.log(`[Your Reading List]`);
     console.log(``);
@@ -112,7 +95,6 @@ function readingListView() {
 
 function newBookSearch() {
     console.log(``);
-    // console.log(`*******************************`);
     console.log(``);
     console.log(`[New Book Search]`);
     console.log(``);
@@ -121,6 +103,7 @@ function newBookSearch() {
     console.log(``);
     // call function to listen for user book search...
 }
+
 
  // "[Book Search Results]"
     // will return top 5 results from google books api (numbered 1-5)
@@ -140,39 +123,27 @@ function newBookSearch() {
 
 function listenForUserInput() {
     // NOTE - include error catching for invalid entries
-    // console.log(`note - listenForUserInput fnc called`);
     
     let userInput = null;
-
-    // prompt.get(['userInput'], function (err, result) {
-    //     if (err) { return "there was an error";}
-    //     userInput = result.userInput;
-    //     console.log(`input received: ${userInput}`);
-    //     // console.log(`result: ${JSON.stringify(result)}`);
-    //     console.log(``);
-    // });
 
     rl.question("Where to? ", function(input) {
         userInput = input;
 
-        if (userInput) {
+        if (userInput !== null) {
             if (userInput === `new` ) newBookSearch();
             if (userInput === `list` ) readingListView();
             if (userInput === `main` ) mainMenu();
-            if (userInput === `q` ) rl.close();
+            if (userInput === `q` ) {
+                console.log("\nAdios!\n");
+                process.exit();
+            }
             if (userInput != "new" && userInput != "list" && userInput != "main" && userInput != "q") {
                 console.log(``);
-                console.log(`Invalid entry. Please try again`);
+                console.log(`Not an accepted directory key. Please try again.`);
                 console.log(``);
                 listenForUserInput();
-            }
+            } 
         }
-    
-    });
-
-    rl.on("close", function() {
-        console.log("\nAdios!\n");
-        process.exit(0);
     });
 
 }
@@ -191,8 +162,4 @@ function listenForUserBookSearch() {
 
 
 
-// console.log('hello... ');
-// console.log('............. ');
-// console.log(readingList);
-// console.log(searchResults);
 startupMessage();
