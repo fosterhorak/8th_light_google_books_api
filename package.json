@@ -1,5 +1,19 @@
 {
-  "dependencies": {
-    "prompt": "^1.1.0"
-  }
+  "name": "8th_light_google_books_api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fosterhorak/8th_light_google_books_api.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/fosterhorak/8th_light_google_books_api/issues"
+  },
+  "homepage": "https://github.com/fosterhorak/8th_light_google_books_api#readme"
 }
