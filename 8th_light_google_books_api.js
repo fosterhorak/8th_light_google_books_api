@@ -106,7 +106,8 @@ function listenForUserInput() {
                 console.log("\nAdios!\n");
                 process.exit();
             }
-            if (userInput != "new" && userInput != "list" && userInput != "main" && userInput != "q") {
+            let arr = ['new','list','main','q'];
+            if (!arr.includes(userInput)) {
                 console.log(`\nNot an accepted directory key. Please try again.\n`);
                 listenForUserInput();
             } 
@@ -198,7 +199,5 @@ function addBook(num) {
     readingList.push(searchResults[num-1]);
     console.log('\nBook Added to Reading List!!!\n');
 }       
-
-
 
 startupMessage();
