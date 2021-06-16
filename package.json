@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/fosterhorak/8th_light_google_books_api/issues"
   },
-  "homepage": "https://github.com/fosterhorak/8th_light_google_books_api#readme"
+  "homepage": "https://github.com/fosterhorak/8th_light_google_books_api#readme",
+  "dependencies": {
+    "axios": "^0.21.1"
+  }
 }

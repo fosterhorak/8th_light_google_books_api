@@ -1,83 +1,103 @@
-// Code Submission Instructions...
-// Create a command line application that allows you to use the Google Books API to search for books and construct a reading list.
-
-// You do not have to use a private GitHub repo for this.
-
-// This application should allow you to:
-// Type in a query and display a list of 5 books matching that query.
-// Each item in the list should include the book's author, title, and publishing company.
-// A user should be able to select a book from the five displayed to save to a “Reading List”
-// View a “Reading List” with all the books the user has selected from their queries -- this is a local reading list and not tied to Google Books’s account features.
-// For programming language, choose any language you want as long as it is not the same language you chose to review in the Code Review section above. 
-// Feel free to use a library (or not) for the Google Books call or JSON parsing.
-
-// Please do not add any additional features.
-
-// .......................................................
-
-
-
 // NOTES  (to do)
-    // - google api functioning...
-    // - copy top 5 results to searchResults
-    // - user selection to add book to reading list...
     // - test for bugs and edge cases...
     // - add colors to make readability easier (welcome message, menu, list, search, and goodbye message)
 
 
-// "readline" from nodejs (npm install prompt) -- to handle user inputs
+// axios for api calls...
+const axios = require("axios");    
+
+// readline from nodejs to handle user inputs
 const readline = require("readline");
 const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout
 });
 
-// reading list - filled for dev purposes
+// creating empty reading list
 let readingList = [];
-// let readingList = [     ["demo title", "demo author", "demo publishing co"], 
-//                     ["demo title", "demo author", "demo publishing co"], 
-//                     ["demo title", "demo author", "demo publishing co"], 
-//                     ["demo title", "demo author", "demo publishing co"], 
-//                     ["demo title", "demo author", "demo publishing co"]];
 
-// search results list - filled for dev purposes
-let searchResults = [   ["demo search title 1", "demo search author", "demo search publishing co"], 
-                    ["demo search title 2", "demo search author", "demo search publishing co"], 
-                    ["demo search title 3", "demo search author", "demo search publishing co"], 
-                    ["demo search title 4", "demo search author", "demo search publishing co"], 
-                    ["demo search title 5", "demo search author", "demo search publishing co"]];
+// creating empty search results list
+let searchResults = [];
 
-function startupMessage() {
+// start up function
+function start() {
     console.log(`\nWelcome to your virtual book library!`);
     mainMenu();
 }            
 
+
+// MAIN PAGES...
+
+// main menu - "main"
 function mainMenu() {
     console.log(`\n[Main Menu]\n`);
-    console.log(`You currently have ${readingList.length} books in your Reading List`);
-    navOptions();
+    console.log(`You currently have ${readingList.length} books in your reading list.`);
+    directory();
     listenForUserInput();
 }
 
-function navOptions() {
-    console.log(`\nDirectory`);
-    console.log(`--------------------------------------------------------`);
+// displays current reading list - "list"
+function readingListView() {
+    console.log(`\n[Your Reading List]\n`);
+    if (!readingList.length) console.log(`Your reading list is empty :( `);
+    else displayBookList(readingList);
+    directory();
+    listenForUserInput();
+}
+
+// new book search page - "new"
+function newBookSearch() {
+    console.log(`\n[New Book Search]\n`);
+    console.log(`Type in your search below, then hit enter!`);
+    console.log(`------------------------------------------\n`);
+    listenForUserBookSearch();
+}
+
+// search results page (landing page after submitting a book search)
+function bookSearchResults(searchTerm) {
+    console.log(`\n[Book Search Results]`);
+    console.log(`You searched: "${searchTerm}"`);
+    console.log(`\nsearching now...\n`);
+    
+    // call helper function - googleBookSearch(searchTerm);
+    googleBookSearch(searchTerm);
+
+    // setting delay to allow for googleBookSearch function to finish...
+    setTimeout(function() { 
+        
+        // in the case that there were no results...
+        if (!searchResults.length) {
+            console.log(`Sorry, no books match your search :( `);
+            directory();
+            listenForUserInput();
+        }
+        
+        // display results
+        else {
+            displayBookList(searchResults);
+            console.log(`\nTo add a book to your reading list, enter the book's number [1-5]`);
+            console.log(`^ You will be redirected to your reading list ^\n`);
+            console.log(`Or navigate using the directory below...`);
+            directory();
+            listenForReadingListAddition();
+        }   
+        ;}, 2500 );
+}
+
+
+// COMPONENTS....
+
+// prints directory instructions
+function directory() {
+    console.log(`\n------------------Directory----------------------------`);
     console.log(`New Book Search:   type "new" + enter`);
     console.log(`Reading List:      type "list" + enter`);
     console.log(`Main Menu:         type "main" + enter`);
     console.log(`Quit:              type "q" + enter`);
     console.log(`--------------------------------------------------------\n`);
-
 }
 
-function readingListView() {
-    console.log(`\n[Your Reading List]\n`);
-    if (!readingList.length) console.log(`Your reading list is empty :( `);
-    else displayBookList(readingList);
-    navOptions();
-    listenForUserInput();
-}
-
+// displays lists of books (readingList or searchResults)
 function displayBookList(list){
     console.log(` #  ||  TITLE  ||  AUTHOR ||  PUBLISHING COMPANY`);
     console.log(` ----------------------------------------------- `);
@@ -86,19 +106,62 @@ function displayBookList(list){
     }
 }
 
-function newBookSearch() {
-    console.log(`\n[New Book Search]\n`);
-    console.log(`Type in your search below, then hit enter!`);
-    console.log(`------------------------------------------\n`);
-    listenForUserBookSearch();
+// api function - copies api data to searchResults array
+function googleBookSearch(searchTerm) {
+    // clearing out searchResults (incase of prevous search...)
+    searchResults = [];
+    
+    // todo: modify search string to replace spaces with "+" marks
+    let urlSearch = searchTerm;
+    
+    axios
+        .get(
+            `https://www.googleapis.com/books/v1/volumes?q=${urlSearch}`
+        )
+        .then(res =>{
+            let books = res.data.items; 
+            console.log(`loading results...\n`);
+
+            // if there are no results... searchResults stays an empty array
+            if (books === undefined) {
+                searchResults = [];
+            }
+
+            // if there are less than 5 results... add them to searchResults
+            else if (books.length && books.length < 5 ) {
+                for (let i = 0; i < books.length; i++) {
+                    searchResults.push([ books[i].volumeInfo.title, books[i].volumeInfo.authors, books[i].volumeInfo.publisher]);
+                }
+            }
+
+            // if there are 5 or more results... add the first 5 to searchResults
+            else if (books.length > 4 ) {
+                for (let i = 0; i < 5; i++) {
+                    searchResults.push([ books[i].volumeInfo.title, books[i].volumeInfo.authors, books[i].volumeInfo.publisher]);
+                }
+            }
+        })
+
 }
 
+// adds the user's selected book from searchResults to readingList
+function addBook(num) {
+    readingList.push(searchResults[num-1]);
+    console.log('\nSelection was added to your reading list!\n');
+}       
 
+
+
+
+// LISTENING FUNCTIONS...
+
+// listens for user's directory inputs
 function listenForUserInput() {
     let userInput = null;
     rl.question("Where to? ", function(input) {
         userInput = input;
         if (userInput !== null) {
+            // directory redirects
             if (userInput === `new` ) newBookSearch();
             if (userInput === `list` ) readingListView();
             if (userInput === `main` ) mainMenu();
@@ -106,6 +169,7 @@ function listenForUserInput() {
                 console.log("\nAdios!\n");
                 process.exit();
             }
+            // error catch & guidance
             let arr = ['new','list','main','q'];
             if (!arr.includes(userInput)) {
                 console.log(`\nNot an accepted directory key. Please try again.\n`);
@@ -115,23 +179,25 @@ function listenForUserInput() {
     });
 }
 
+// listens for user book search term
 function listenForUserBookSearch() {
-    // NOTE - include error catching for invalid entries??
     let userSearch;
     rl.question("search: ", function(search) {
         userSearch = search;
         bookSearchResults(userSearch);
     });
-    // notes - possible feature to add
-        // provide a way to let users escape from search? or do i force them to search?
+
+    // notes - possible feature to add: provide a way to let users escape from search?
         // '**main' = key word to escape to main menu
 }
 
+// listens for user's directory inputs OR which book to add to their reading list
 function listenForReadingListAddition() {
     let userSelection;
     rl.question("Selection: ", function(selection) {
         userSelection = selection;
         if (userSelection !== null) {
+            // directory redirects
             if (userSelection === `new` ) newBookSearch();
             if (userSelection === `list` ) readingListView();
             if (userSelection === `main` ) mainMenu();
@@ -139,6 +205,7 @@ function listenForReadingListAddition() {
                 console.log("\nAdios!\n");
                 process.exit();
             }
+            // adding a book to their reading list
             if (userSelection === `1` ) {
                 addBook(1);
                 readingListView();
@@ -159,6 +226,9 @@ function listenForReadingListAddition() {
                 addBook(5);
                 readingListView();
             }
+            /// ^^^ note -  need to account for scenario where there are less than 5 options... (dependent on length of searchResults)
+
+            // error catch & guidance
             let arr = ['new','list','main','q','1','2','3','4','5'];
             if (!arr.includes(userSelection)) {
                 console.log(`\nInvalid entry. Please try again.\n`);
@@ -168,36 +238,4 @@ function listenForReadingListAddition() {
     });
 }
 
-
-function bookSearchResults(searchTerm) {
-    console.log(`\n[Book Search Results]`);
-    console.log(`You searched: ${searchTerm}`);
-    console.log(`Results...\n`);
-    
-    // call helper function - googleBookSearch(searchTerm);
-    // will return / update my temporary searchResults (book array);
-    
-    displayBookList(searchResults);
-    console.log(`\nTo add a book to your reading list, enter the book's number [1-5]`);
-    console.log(`^ You will be redirected to your reading list ^\n`);
-    console.log(`Or navigate using the directory below...`);
-    navOptions();
-    listenForReadingListAddition();
-
-    // need to account for situation for no search results...
-}
-
-function googleBookSearch(searchTerm) {
-    // take user search
-    // call google API
-    // get resulting object from google API
-    // copy/scrape to my temporary searchResults array
-    // return array
-}
-
-function addBook(num) {
-    readingList.push(searchResults[num-1]);
-    console.log('\nBook Added to Reading List!!!\n');
-}       
-
-startupMessage();
+start();
