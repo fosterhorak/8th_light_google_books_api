@@ -16,18 +16,22 @@
 
 
 
-// "prompt" from nodejs (npm install prompt)
-// const prompt = require('prompt');
+// NOTES  (to do)
+    // - rest of functions up and working...
+    // - google api functioning...
+    // - copy top 5 results to searchResults
+    // - user selection to add book to reading list...
+    // - test for bugs and edge cases...
+    // - add colors to make readability easier (welcome message, menu, list, search, and goodbye message)
 
 
-// "readline" from nodejs (npm install prompt)
+
+// "readline" from nodejs (npm install prompt) -- to handle user inputs
 const readline = require("readline");
 const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout
 });
-
-
 
 // reading list - filled for dev
 let readingList = [     ["demo title", "demo author", "demo publishing co"], 
@@ -39,47 +43,38 @@ let readingList = [     ["demo title", "demo author", "demo publishing co"],
 // search results list - filled for dev
     // this list will be filled with the top 5 results from google books api with search query is made
     // when user selects one, the info will be copied into the user library reading list
-let searchResults = [   [1, "demo title", "demo author", "demo publishing co"], 
-                    [2, "demo title", "demo author", "demo publishing co"], 
-                    [3, "demo title", "demo author", "demo publishing co"], 
-                    [4, "demo title", "demo author", "demo publishing co"], 
-                    [5, "demo title", "demo author", "demo publishing co"]];
-        
+let searchResults = [   ["demo search title 1", "demo search author", "demo search publishing co"], 
+                    ["demo search title 2", "demo search author", "demo search publishing co"], 
+                    ["demo search title 3", "demo search author", "demo search publishing co"], 
+                    ["demo search title 4", "demo search author", "demo search publishing co"], 
+                    ["demo search title 5", "demo search author", "demo search publishing co"]];
+
 function startupMessage() {
-    console.log(``);
-    console.log(`Welcome to your virtual book library!`);
+    console.log(`\nWelcome to your virtual book library!`);
     mainMenu();
 }            
 
 function mainMenu() {
-    console.log(``);
-    console.log(``);
-    console.log(`[Main Menu]`);
-    console.log(``);
+
+    console.log(`\n[Main Menu]\n`);
     console.log(`You currently have ${readingList.length} books in your Reading List`);
     navOptions();
+    listenForUserInput();
 }
 
 function navOptions() {
-    console.log(``);
+    console.log(`\nDirectory`);
     console.log(`--------------------------------------------------------`);
-    console.log(``);
     console.log(`New Book Search:   type "new" + enter`);
     console.log(`Reading List:      type "list" + enter`);
     console.log(`Main Menu:         type "main" + enter`);
     console.log(`Quit:              type "q" + enter`);
-    console.log(``);
-    
-    // call function to listen to user input
-    listenForUserInput();
+    console.log(`--------------------------------------------------------\n`);
 
 }
 
 function readingListView() {
-    console.log(``);
-    console.log(``);
-    console.log(`[Your Reading List]`);
-    console.log(``);
+    console.log(`\n[Your Reading List]\n`);
     if (!readingList.length) console.log(`You're reading list is empty :( `);
     else {
         console.log(` #  ||  TITLE  ||  AUTHOR ||  PUBLISHING COMPANY`);
@@ -88,47 +83,24 @@ function readingListView() {
             console.log(` ${i+1}  ||  ${readingList[i][0]}  ||  ${readingList[i][1]}  ||  ${readingList[i][2]} `);
         }
     }
-    console.log(``);
     navOptions();
+    listenForUserInput();
 }
 
 
 function newBookSearch() {
-    console.log(``);
-    console.log(``);
-    console.log(`[New Book Search]`);
-    console.log(``);
-    console.log(`Type in the your search below, then hit enter!`);
-    console.log(`---------------------------------------------- `);
-    console.log(``);
+    console.log(`\n[New Book Search]\n`);
+    console.log(`Type in your search below, then hit enter!`);
+    console.log(`------------------------------------------\n`);
     // call function to listen for user book search...
+    listenForUserBookSearch();
 }
 
 
- // "[Book Search Results]"
-    // will return top 5 results from google books api (numbered 1-5)
-    // below search results will provide guidance...
-        // To add a book to your reading list: type "# of your book selection" + enter 
-            // note - you'll be redirected to your reading list
-
-    // New Book Search: type "new" + enter
-    // Reading List: type "list" + enter
-    // Main Menu = type "main" + enter
-    // Quit = type "q" + enter
-        // NOTE - include error catching for invalid entries
-
-
-
-
-
 function listenForUserInput() {
-    // NOTE - include error catching for invalid entries
-    
     let userInput = null;
-
     rl.question("Where to? ", function(input) {
         userInput = input;
-
         if (userInput !== null) {
             if (userInput === `new` ) newBookSearch();
             if (userInput === `list` ) readingListView();
@@ -138,28 +110,121 @@ function listenForUserInput() {
                 process.exit();
             }
             if (userInput != "new" && userInput != "list" && userInput != "main" && userInput != "q") {
-                console.log(``);
-                console.log(`Not an accepted directory key. Please try again.`);
-                console.log(``);
+                console.log(`\nNot an accepted directory key. Please try again.\n`);
                 listenForUserInput();
             } 
         }
     });
-
 }
 
 function listenForUserBookSearch() {
-    // NOTE - include error catching for invalid entries
+    // NOTE - include error catching for invalid entries??
+    let userSearch;
+    rl.question("search: ", function(search) {
+        userSearch = search;
+        bookSearchResults(userSearch);
+    });
+    // notes - possible feature to add
+        // provide a way to let users escape from search? or do i force them to search?
+        // '**main' = key word to escape to main menu
+}
 
-    // provide a way to let users escape from search? or force them to search?
-        // -- require them to enter "s:" + search term, then keep other commands active?
-        // provide a key word to escape search?
+function listenForReadingListAddition() {
+    let userSelection;
+    rl.question("Selection: ", function(selection) {
+        userSelection = selection;
+        if (userSelection !== null) {
+            if (userSelection === `new` ) newBookSearch();
+            if (userSelection === `list` ) readingListView();
+            if (userSelection === `main` ) mainMenu();
+            if (userSelection === `q` ) {
+                console.log("\nAdios!\n");
+                process.exit();
+            }
+            if (userSelection === `1` ) {
+                addBook(1);
+                readingListView();
+            }
+            if (userSelection === `2` ) {
+                addBook(2);
+                readingListView();
+            }
+            if (userSelection === `3` ) {
+                addBook(3);
+                readingListView();
+            }
+            if (userSelection === `4` ) {
+                addBook(4);
+                readingListView();
+            }
+            if (userSelection === `5` ) {
+                addBook(5);
+                readingListView();
+            }
+            let arr = ['new','list','main','q','1','2','3','4','5'];
+            if (!arr.includes(userSelection)) {
+                console.log(`\nInvalid entry. Please try again.\n`);
+                listenForReadingListAddition();
+            }
 
-    // what sort of errors / edge cases will I need to catch??
-    // how will i need to manipulate the user input for the api query??? 
-    // if there are no results, I'll need to provide guidance and allow the user to try again...
+            // if (userSelection != "new" && userSelection != "list" && userSelection != "main" && userSelection != "q") {
+            //     console.log(`\nNot an accepted slection or directory key. Please try again.\n`);
+            //     listenForReadingListAddition();
+            // } 
+        }
+    });
 }
 
 
+function bookSearchResults(searchTerm) {
+    console.log(`\n[Book Search Results]`);
+    console.log(`You searched: ${searchTerm}`);
+    console.log(`Results...\n`);
+    
+    // call helper function - googleBookSearch(searchTerm);
+    // will return / update my temporary searchResults (book array);
+    
+    printSearchResults(searchResults);
+    console.log(`\nTo add a book to your reading list, enter the book's number [1-5]`);
+    console.log(`^ You will be redirected to your reading list ^\n`);
+    console.log(`Or navigate using the directory below...`);
+    navOptions();
+    listenForReadingListAddition();
+
+    // need to account for situation for no search results...
+}
+
+function printSearchResults (bookArr) {
+    console.log(` # ||  TITLE  ||  AUTHOR ||  PUBLISHING COMPANY`);
+    for (let i = 0; i < bookArr.length; i++) {
+        console.log (` ${i+1} || ${bookArr[i][0]} || ${bookArr[i][1]} || ${bookArr[i][2]}`);
+    }
+}
+
+
+function googleBookSearch(searchTerm) {
+    // take user search
+    // call google API
+    // get resulting object from google API
+    // copy/scrape to my temporary searchResults array
+    // return array
+}
+// "[Book Search Results]"
+   // will return top 5 results from google books api (numbered 1-5)
+   // below search results will provide guidance...
+       // To add a book to your reading list: type "# of your book selection" + enter 
+           // note - you'll be redirected to your reading list
+
+   // New Book Search: type "new" + enter
+   // Reading List: type "list" + enter
+   // Main Menu = type "main" + enter
+   // Quit = type "q" + enter
+       // NOTE - include error catching for invalid entries
+
+
+function addBook(num) {
+    readingList.push(searchResults[num-1]);
+    console.log('\nBook Added to Reading List!!!\n');
+}       
 
 startupMessage();
