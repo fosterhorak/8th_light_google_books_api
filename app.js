@@ -13,6 +13,14 @@ const rl = readline.createInterface({
     output: process.stdout
 });
 
+// colored texts options...
+let FgRed = "\x1b[31m%s\x1b[0m";
+let FgGreen = "\x1b[32m%s\x1b[0m";
+let FgYellow = "\x1b[33m%s\x1b[0m";
+let FgBlue = "\x1b[34m%s\x1b[0m";
+let FgMagenta = "\x1b[35m%s\x1b[0m";
+let FgCyan = "\x1b[36m%s\x1b[0m";
+
 // creating empty reading list
 let readingList = [];
 
@@ -21,7 +29,7 @@ let searchResults = [];
 
 // start up function
 function start() {
-    console.log(`\nWelcome to your virtual book library!`);
+    console.log(FgYellow, `\nWelcome to your virtual book library!`);
     mainMenu();
 }            
 
@@ -30,7 +38,7 @@ function start() {
 
 // main menu - "main"
 function mainMenu() {
-    console.log(`\n[Main Menu]\n`);
+    console.warn(FgMagenta, `\n[Main Menu]\n`);
     console.log(`You currently have ${readingList.length} books in your reading list.`);
     directory();
     listenForUserInput();
@@ -38,7 +46,7 @@ function mainMenu() {
 
 // displays current reading list - "list"
 function readingListView() {
-    console.log(`\n[Your Reading List]\n`);
+    console.log(FgMagenta, `\n[Your Reading List]\n`);
     if (!readingList.length) console.log(`Your reading list is empty :( `);
     else displayBookList(readingList);
     directory();
@@ -47,7 +55,7 @@ function readingListView() {
 
 // new book search page - "new"
 function newBookSearch() {
-    console.log(`\n[New Book Search]\n`);
+    console.log(FgMagenta, `\n[New Book Search]\n`);
     console.log(`Type in your search below, then hit enter!`);
     console.log(`------------------------------------------\n`);
     listenForUserBookSearch();
@@ -55,7 +63,7 @@ function newBookSearch() {
 
 // search results page (landing page after submitting a book search)
 function bookSearchResults(searchTerm) {
-    console.log(`\n[Book Search Results]`);
+    console.log(FgCyan, `\n[Book Search Results]`);
     console.log(`You searched: "${searchTerm}"`);
     console.log(`\nsearching now...\n`);
     
@@ -75,7 +83,7 @@ function bookSearchResults(searchTerm) {
         // display results
         else {
             displayBookList(searchResults);
-            console.log(`\nTo add a book to your reading list, enter the book's number [1-5]`);
+            console.log(FgGreen, `\nTo add a book to your reading list, enter the book's number [1-5]`);
             console.log(`^ You will be redirected to your reading list ^\n`);
             console.log(`Or navigate using the directory below...`);
             directory();
@@ -90,10 +98,10 @@ function bookSearchResults(searchTerm) {
 // prints directory instructions
 function directory() {
     console.log(`\n------------------Directory----------------------------`);
-    console.log(`New Book Search:   type "new" + enter`);
-    console.log(`Reading List:      type "list" + enter`);
-    console.log(`Main Menu:         type "main" + enter`);
-    console.log(`Quit:              type "q" + enter`);
+    console.log(FgMagenta, `New Book Search:   type "new" + enter`);
+    console.log(FgMagenta, `Reading List:      type "list" + enter`);
+    console.log(FgMagenta, `Main Menu:         type "main" + enter`);
+    console.log(FgMagenta, `Quit:              type "q" + enter`);
     console.log(`--------------------------------------------------------\n`);
 }
 
@@ -147,7 +155,7 @@ function googleBookSearch(searchTerm) {
 // adds the user's selected book from searchResults to readingList
 function addBook(num) {
     readingList.push(searchResults[num-1]);
-    console.log('\nSelection was added to your reading list!\n');
+    console.log(FgGreen, '\nYour selection was added to your reading list!\n');
 }       
 
 
