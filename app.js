@@ -1,7 +1,3 @@
-// NOTES  (to do)
-    // - test for bugs and edge cases...
-    // - add colors to make readability easier (welcome message, menu, list, search, and goodbye message)
-
 
 // axios for api calls...
 const axios = require("axios");    
@@ -13,7 +9,7 @@ const rl = readline.createInterface({
     output: process.stdout
 });
 
-// colored texts options...
+// colored texts options
 let FgRed = "\x1b[31m%s\x1b[0m";
 let FgGreen = "\x1b[32m%s\x1b[0m";
 let FgYellow = "\x1b[33m%s\x1b[0m";
@@ -67,20 +63,20 @@ function bookSearchResults(searchTerm) {
     console.log(`You searched: "${searchTerm}"`);
     console.log(`\nsearching now...\n`);
     
-    // call helper function - googleBookSearch(searchTerm);
+    // helper function - searches google api and updates searchResults array
     googleBookSearch(searchTerm);
 
-    // setting delay to allow for googleBookSearch function to finish...
+    // setting delay to allow for googleBookSearch function to finish
     setTimeout(function() { 
         
-        // in the case that there were no results...
+        // if no results
         if (!searchResults.length) {
             console.log(`Sorry, no books match your search :( `);
             directory();
             listenForUserInput();
         }
         
-        // display results
+        // if results - display results & instructions for adding a book to readingList
         else {
             displayBookList(searchResults);
             console.log(FgGreen, `\nTo add a book to your reading list, enter the book's number [1-5]`);
@@ -115,16 +111,15 @@ function displayBookList(list){
 }
 
 // api function - copies api data to searchResults array
-function googleBookSearch(searchTerm) {
-    // clearing out searchResults (incase of prevous search...)
+function googleBookSearch(userSearch) {
+    // clearing out searchResults (in case of prevous search...)
     searchResults = [];
     
-    // todo: modify search string to replace spaces with "+" marks
-    let urlSearch = searchTerm;
+    // Note - no manipulation to the user's search is necessary
     
     axios
         .get(
-            `https://www.googleapis.com/books/v1/volumes?q=${urlSearch}`
+            `https://www.googleapis.com/books/v1/volumes?q=${userSearch}`
         )
         .then(res =>{
             let books = res.data.items; 
@@ -155,7 +150,7 @@ function googleBookSearch(searchTerm) {
 // adds the user's selected book from searchResults to readingList
 function addBook(num) {
     readingList.push(searchResults[num-1]);
-    console.log(FgGreen, '\nYour selection was added to your reading list!\n');
+    console.log(FgGreen, '\nThe book was added to your reading list!\n');
 }       
 
 
@@ -165,21 +160,19 @@ function addBook(num) {
 
 // listens for user's directory inputs
 function listenForUserInput() {
-    let userInput = null;
     rl.question("Where to? ", function(input) {
-        userInput = input;
-        if (userInput !== null) {
+        if (input !== null) {
             // directory redirects
-            if (userInput === `new` ) newBookSearch();
-            if (userInput === `list` ) readingListView();
-            if (userInput === `main` ) mainMenu();
-            if (userInput === `q` ) {
+            if (input === `new` ) newBookSearch();
+            if (input === `list` ) readingListView();
+            if (input === `main` ) mainMenu();
+            if (input === `q` ) {
                 console.log("\nAdios!\n");
                 process.exit();
             }
             // error catch & guidance
             let arr = ['new','list','main','q'];
-            if (!arr.includes(userInput)) {
+            if (!arr.includes(input)) {
                 console.log(`\nNot an accepted directory key. Please try again.\n`);
                 listenForUserInput();
             } 
@@ -189,10 +182,8 @@ function listenForUserInput() {
 
 // listens for user book search term
 function listenForUserBookSearch() {
-    let userSearch;
     rl.question("search: ", function(search) {
-        userSearch = search;
-        bookSearchResults(userSearch);
+        bookSearchResults(search);
     });
 
     // notes - possible feature to add: provide a way to let users escape from search?
@@ -201,36 +192,34 @@ function listenForUserBookSearch() {
 
 // listens for user's directory inputs OR which book to add to their reading list
 function listenForReadingListAddition() {
-    let userSelection;
     rl.question("Selection: ", function(selection) {
-        userSelection = selection;
-        if (userSelection !== null) {
+        if (selection !== null) {
             // directory redirects
-            if (userSelection === `new` ) newBookSearch();
-            if (userSelection === `list` ) readingListView();
-            if (userSelection === `main` ) mainMenu();
-            if (userSelection === `q` ) {
+            if (selection === `new` ) newBookSearch();
+            if (selection === `list` ) readingListView();
+            if (selection === `main` ) mainMenu();
+            if (selection === `q` ) {
                 console.log("\nAdios!\n");
                 process.exit();
             }
             // adding a book to their reading list
-            if (userSelection === `1` ) {
+            if (selection === `1` ) {
                 addBook(1);
                 readingListView();
-            }
-            if (userSelection === `2` ) {
+            }r3
+            if (selection === `2` ) {
                 addBook(2);
                 readingListView();
             }
-            if (userSelection === `3` ) {
+            if (selection === `3` ) {
                 addBook(3);
                 readingListView();
             }
-            if (userSelection === `4` ) {
+            if (selection === `4` ) {
                 addBook(4);
                 readingListView();
             }
-            if (userSelection === `5` ) {
+            if (selection === `5` ) {
                 addBook(5);
                 readingListView();
             }
@@ -238,7 +227,7 @@ function listenForReadingListAddition() {
 
             // error catch & guidance
             let arr = ['new','list','main','q','1','2','3','4','5'];
-            if (!arr.includes(userSelection)) {
+            if (!arr.includes(selection)) {
                 console.log(`\nInvalid entry. Please try again.\n`);
                 listenForReadingListAddition();
             }
