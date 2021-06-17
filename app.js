@@ -34,8 +34,9 @@ function start() {
 
 // main menu - "main"
 function mainMenu() {
-    console.warn(FgMagenta, `\n[Main Menu]\n`);
-    console.log(`You currently have ${readingList.length} books in your reading list.`);
+    console.warn(FgMagenta, `\n[Main Menu]\n`); 
+    if ( readingList.length === 1)  console.log(`You currently have ${readingList.length} book in your reading list.`);
+    else console.log(`You currently have ${readingList.length} books in your reading list.`);
     directory();
     listenForUserInput();
 }
