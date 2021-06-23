@@ -26,7 +26,7 @@ function start() {
 
 // MAIN PAGES...
 function mainMenu() {
-    console.warn(FgMagenta, `\n[Main Menu]\n`); 
+    console.log(FgMagenta, `\n[Main Menu]\n`); 
     if ( readingList.length === 1)  console.log(`You currently have ${readingList.length} book in your reading list.`);
     else console.log(`You currently have ${readingList.length} books in your reading list.`);
     directory();
@@ -205,3 +205,15 @@ function listenForReadingListAddition() {
 }
 
 start();
+
+
+
+// module.exports = addBook;
+
+//  unit tests...
+// ??? bookSearchResults - if searchReuslts are empty... "sorry, no books..."
+// ??? displayBookList - if searchResults exist... "To add..."
+// addBook - confirm book is pushed to reading list from searchResults...
+// listenForUserInput... input calls correct function... incorrect = error message...
+// ??? listenForUserBookSearch... input calls correct function...
+// listenForReadingListAddition... input calls correct function... incorrect = error message...

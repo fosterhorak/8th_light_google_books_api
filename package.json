@@ -4,7 +4,7 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest --coverage"
   },
   "repository": {
     "type": "git",
@@ -18,5 +18,8 @@
   "homepage": "https://github.com/fosterhorak/8th_light_google_books_api#readme",
   "dependencies": {
     "axios": "^0.21.1"
+  },
+  "devDependencies": {
+    "jest": "^27.0.5"
   }
 }
