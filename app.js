@@ -89,10 +89,10 @@ function directory() {
 
 // displays books (readingList AND searchResults)
 function displayBookList(list){
-    console.log(` #  ||  TITLE  ||  AUTHOR ||  PUBLISHING COMPANY`);
+    console.log(` #  ||  TITLE  ||  AUTHORS ||  PUBLISHING COMPANY`);
     console.log(` ----------------------------------------------- `);
     for (let i = 0; i < list.length; i++) {
-        console.log(` ${i+1}  ||  ${list[i][0]}  ||  ${list[i][1]}  ||  ${list[i][2]} `);
+        console.log(` ${i+1}  ||  ${list[i]['title']}  ||  ${list[i]['authors']}  ||  ${list[i]['publisher']} `);
     }
 }
 
@@ -113,13 +113,13 @@ function googleBookSearch(userSearch) {
             // < 5 results = add all to searchResults
             else if (books.length && books.length < 5 ) {
                 for (let i = 0; i < books.length; i++) {
-                    searchResults.push([ books[i].volumeInfo.title, books[i].volumeInfo.authors, books[i].volumeInfo.publisher]);
+                    searchResults.push({'title': books[i].volumeInfo.title, 'authors': books[i].volumeInfo.authors, 'publisher': books[i].volumeInfo.publisher});
                 }
             }
             // > 5 results = add first 5 to searchResults
             else if (books.length > 4 ) {
                 for (let i = 0; i < 5; i++) {
-                    searchResults.push([ books[i].volumeInfo.title, books[i].volumeInfo.authors, books[i].volumeInfo.publisher]);
+                    searchResults.push({'title': books[i].volumeInfo.title, 'authors': books[i].volumeInfo.authors, 'publisher': books[i].volumeInfo.publisher});
                 }
             }
         })
