@@ -204,16 +204,25 @@ function listenForReadingListAddition() {
     });
 }
 
+
 start();
 
 
+// export functions for testing
+exports.checkAddBook = (idx, searchList, readList) => {
+    readList.push(searchList[idx-1]);
+    return readList;
+}
 
-// module.exports = addBook;
-
-//  unit tests...
-// ??? bookSearchResults - if searchReuslts are empty... "sorry, no books..."
-// ??? displayBookList - if searchResults exist... "To add..."
-// addBook - confirm book is pushed to reading list from searchResults...
-// listenForUserInput... input calls correct function... incorrect = error message...
-// ??? listenForUserBookSearch... input calls correct function...
-// listenForReadingListAddition... input calls correct function... incorrect = error message...
+exports.checkListenForUserInput = (input) => {
+    let validEntries = ['new','list','main','q'];
+    if (input !== null) {
+        // directory redirects
+        if (input === `new` ) return 'newBookSearch()';
+        if (input === `list` ) return 'readingListView()';
+        if (input === `main` ) return 'mainMenu()';
+        if (input === `q` )  return 'Adios! & exit()';
+        // error catch & guidance
+        if (!validEntries.includes(input)) return 'Not an accepted input & listenForUserInput()';
+    }
+}
