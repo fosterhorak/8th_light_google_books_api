@@ -55,17 +55,14 @@ function bookSearchResults(searchTerm) {
     
     googleBookSearch(searchTerm);
 
-    // setTimeout to allow for googleBookSearch to finish
     setTimeout(function() { 
         
-        // displays message if no results
         if (!searchResults.length) {
             console.log(`Sorry, no books match your search :( `);
             directory();
             listenForUserInput();
         }
         
-        // display search results & options
         else {
             displayBookList(searchResults);
             console.log(FgGreen, `\nTo add a book to your reading list, enter the book's number [1-5]`);
@@ -87,7 +84,6 @@ function directory() {
     console.log(`--------------------------------------------------------\n`);
 }
 
-// displays books (readingList AND searchResults)
 function displayBookList(list){
     console.log(` #  ||  TITLE  ||  AUTHORS ||  PUBLISHING COMPANY`);
     console.log(` ----------------------------------------------- `);
@@ -96,7 +92,6 @@ function displayBookList(list){
     }
 }
 
-// copies google book api data to searchResults
 function googleBookSearch(userSearch) {
     searchResults = [];
     axios
@@ -125,7 +120,6 @@ function googleBookSearch(userSearch) {
         })
 }
 
-// add book to readingList
 function addBook(num) {
     readingList.push(searchResults[num-1]);
     console.log(FgGreen, '\nThe book was added to your reading list!\n');
@@ -136,7 +130,6 @@ function addBook(num) {
 function listenForUserInput() {
     rl.question("Where to? ", function(input) {
         if (input !== null) {
-            // directory redirects
             if (input === `new` ) newBookSearch();
             if (input === `list` ) readingListView();
             if (input === `main` ) mainMenu();
@@ -144,7 +137,6 @@ function listenForUserInput() {
                 console.log("\nAdios!\n");
                 process.exit();
             }
-            // error catch & guidance
             let arr = ['new','list','main','q'];
             if (!arr.includes(input)) {
                 console.log(`\nNot an accepted directory key. Please try again.\n`);
@@ -154,7 +146,6 @@ function listenForUserInput() {
     });
 }
 
-// listens for new book search
 function listenForUserBookSearch() {
     rl.question("search: ", function(search) {
         bookSearchResults(search);
@@ -165,7 +156,6 @@ function listenForUserBookSearch() {
 function listenForReadingListAddition() {
     rl.question("Selection: ", function(selection) {
         if (selection !== null) {
-            // directory redirects
             if (selection === `new` ) newBookSearch();
             if (selection === `list` ) readingListView();
             if (selection === `main` ) mainMenu();
@@ -173,7 +163,6 @@ function listenForReadingListAddition() {
                 console.log("\nAdios!\n");
                 process.exit();
             }
-            // adding book to reading list
             if (selection === `1` ) {
                 addBook(1);
                 readingListView();
@@ -194,7 +183,6 @@ function listenForReadingListAddition() {
                 addBook(5);
                 readingListView();
             }
-            // error catch & guidance
             let arr = ['new','list','main','q','1','2','3','4','5'];
             if (!arr.includes(selection)) {
                 console.log(`\nInvalid entry. Please try again.\n`);
@@ -213,7 +201,6 @@ exports.checkAddBook = (idx, searchList, readList) => {
     readList.push(searchList[idx-1]);
     return readList;
 }
-
 exports.checkListenForUserInput = (input) => {
     let validEntries = ['new','list','main','q'];
     if (input !== null) {
