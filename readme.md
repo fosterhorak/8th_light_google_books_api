@@ -3,8 +3,8 @@
 
 
 ## Dependent Technologies:
-- Node (Install instructions: https://nodejs.org/en/download/package-manager/#macos)
-- Axios (Install instructions: https://www.npmjs.com/package/axios#installing)
+- Node (doc: https://nodejs.org/en/download/package-manager/#macos)
+- Axios (doc: https://www.npmjs.com/package/axios#installing)
 
 ## To start:
 - download or clone the root to your machine
