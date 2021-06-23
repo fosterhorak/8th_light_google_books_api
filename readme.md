@@ -7,4 +7,6 @@
 - Axios (Install instructions: https://www.npmjs.com/package/axios#installing)
 
 ## To start:
-- node app.js
+- download or clone the root to your machine
+- ensure dependent technologies are installed
+- to start, enter "node app.js" in your terminal
